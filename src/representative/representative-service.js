@@ -2,35 +2,41 @@ const fetch = require('node-fetch');
 const config = require('../config');
 
 const RepresentativeService = {
-  getDistrict(address) {
+  getReps(address) {
     let congressionalDistrict = '';
     let stateCode;
     let districtCode;
     let districtObj;
+    
+    let params = new URLSearchParams({ q: address, fields: 'cd', api_key: process.env.GEOCODE_REPRESENTATIVE_LOOKUP_KEY });
+
+    console.log('params.toString()', params.toString())
 
     return fetch(
-      `${config.CIVIC_API_URL}?key=${config.CIVIC_API_KEY}&address=${address}`
+      `${process.env.GEOCODE_API_URL}?${params.toString()}`
     )
       .then(res => {
         return res.json();
-      })
-      .then(response => {
-        if(response.normalizedInput) {
-          stateCode = response.normalizedInput.state.toLowerCase();
+      })        
+        // TODO remove comments
+        // if(response.normalizedInput) {
+        //   stateCode = response.normalizedInput.state.toLowerCase();
 
-          Object.keys(response.divisions).forEach(item => {
-            if (item.includes(`/state:${stateCode}/cd:`)) {
-              districtCode = item.split(`/state:${stateCode}/cd:`)[1];
-            }
-          });
+        //   Object.keys(response.divisions).forEach(item => {
+        //     if (item.includes(`/state:${stateCode}/cd:`)) {
+        //       districtCode = item.split(`/state:${stateCode}/cd:`)[1];
+        //     }
+        //   });
   
-          districtObj = {
-            state: stateCode,
-            district: districtCode,
-          };
-        }
-        return districtObj;
-      });
+        //   districtObj = {
+        //     state: stateCode,
+        //     district: districtCode,
+        //   };
+        // }
+        // // TODO remove
+        // console.log('districtObj', districtObj);
+        // return districtObj;
+        // });
   },
 
   imagesMap(images){

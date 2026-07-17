@@ -10,19 +10,28 @@ const jsonBodyParser = express.json();
 
 async function getAll(address) {
 
-  let districtObject = await RepresentativeService.getDistrict(address);
+  console.log('address prior to calling getReps()', address)
 
-  if(!districtObject || !districtObject.state || !districtObject.district) { 
-    const st = districtObject.state.toLowerCase();
-    if(!st || !['ak', 'de', 'mt','nd','sd','vt','wy'].includes(st)){
-    throw new Error("We couldn't find your district");
-    } else{
-      districtObject.district = 1;
-    }
-    
+  const reps = await RepresentativeService.getReps(address);
+
+  console.log('reps.results[0].fields --->', reps.results[0].fields)
+  console.log('reps.results[0].fields.congressional_districts[0].current_legislators --->', reps.results[0].fields.congressional_districts[0].current_legislators)
+
+  return reps
+  // TODO remove comments
+  // let districtObject = await RepresentativeService.getDistrict(address);
+
+  // if(!districtObject || !districtObject.state || !districtObject.district) { 
+  //   const st = districtObject.state.toLowerCase();
+  //   if(!st || !['ak', 'de', 'mt','nd','sd','vt','wy'].includes(st)) {
+  //   throw new Error("We couldn't find your district");
+  //   } else{
+  //     districtObject.district = 1;
+  //   }
+
+  // let representatives = await RepresentativeService.getReps(districtObject.state, districtObject.district);
   }
 
-  let representatives = await ProPublicaService.getReps(districtObject.state, districtObject.district);
 
   async function repsResponse (rep) {
     const results = rep.results[0]
@@ -35,12 +44,12 @@ async function getAll(address) {
     
     return {...results, photoUrl, smallPhotoUrl};
   };
-    const reps = representatives.map((rep) => {
-      return repsResponse(rep);
-  });
+  //   const reps = representatives.map((rep) => {
+  //     return repsResponse(rep);
+  // });
 
-  return Promise.all(reps).then(repsArray => ({representatives: repsArray, state: districtObject.state,district: districtObject.district}))
-}
+  // return Promise.all(reps).then(repsArray => ({representatives: repsArray, state: districtObject.state,district: districtObject.district}))
+// }
 
 representativeRouter.post('/', jsonBodyParser, (req, res, next) => {
   const { address } = req.body;
