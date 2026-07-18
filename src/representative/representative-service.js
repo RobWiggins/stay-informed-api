@@ -3,13 +3,9 @@ const config = require('../config');
 
 const RepresentativeService = {
   getReps(address) {
-    let congressionalDistrict = '';
-    let stateCode;
-    let districtCode;
-    let districtObj;
-    
-    let params = new URLSearchParams({ q: address, fields: 'cd', api_key: process.env.GEOCODE_REPRESENTATIVE_LOOKUP_KEY });
+    const params = new URLSearchParams({ q: address, fields: 'cd', api_key: process.env.GEOCODE_REPRESENTATIVE_LOOKUP_KEY });
 
+    // TODO REMOVE LOG STATEMENT
     console.log('params.toString()', params.toString())
 
     return fetch(
@@ -18,25 +14,6 @@ const RepresentativeService = {
       .then(res => {
         return res.json();
       })        
-        // TODO remove comments
-        // if(response.normalizedInput) {
-        //   stateCode = response.normalizedInput.state.toLowerCase();
-
-        //   Object.keys(response.divisions).forEach(item => {
-        //     if (item.includes(`/state:${stateCode}/cd:`)) {
-        //       districtCode = item.split(`/state:${stateCode}/cd:`)[1];
-        //     }
-        //   });
-  
-        //   districtObj = {
-        //     state: stateCode,
-        //     district: districtCode,
-        //   };
-        // }
-        // // TODO remove
-        // console.log('districtObj', districtObj);
-        // return districtObj;
-        // });
   },
 
   imagesMap(images){

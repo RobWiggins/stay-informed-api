@@ -9,34 +9,26 @@ const representativeRouter = express.Router();
 const jsonBodyParser = express.json();
 
 async function getAll(address) {
-
-  console.log('address prior to calling getReps()', address)
-
   const reps = await RepresentativeService.getReps(address);
-
+  
+  // TODO REMOVE LOG STATEMENTS
+  console.log('reps.results[0].address_components --->', reps.results[0].address_components)
   console.log('reps.results[0].fields --->', reps.results[0].fields)
   console.log('reps.results[0].fields.congressional_districts[0].current_legislators --->', reps.results[0].fields.congressional_districts[0].current_legislators)
-
-  return reps
-  // TODO remove comments
-  // let districtObject = await RepresentativeService.getDistrict(address);
-
-  // if(!districtObject || !districtObject.state || !districtObject.district) { 
-  //   const st = districtObject.state.toLowerCase();
-  //   if(!st || !['ak', 'de', 'mt','nd','sd','vt','wy'].includes(st)) {
-  //   throw new Error("We couldn't find your district");
-  //   } else{
-  //     districtObject.district = 1;
-  //   }
-
-  // let representatives = await RepresentativeService.getReps(districtObject.state, districtObject.district);
+  
+  return {
+    address: reps.results[0].address_components,
+    district: reps.results[0].fields.congressional_districts[0],
+    representatives: reps.results[0].fields.congressional_districts[0].current_legislators
   }
+}
 
 
   async function repsResponse (rep) {
     const results = rep.results[0]
     const photoUrl = `https://theunitedstates.io/images/congress/450x550/${results.member_id}.jpg`
     const smallPhotoUrl = `https://theunitedstates.io/images/congress/225x275/${results.member_id}.jpg`
+    // TODO REMOVE? probably
     // let cid = results.crp_id
     // let contributionTotals = await FinanceService.getContributionTotals(cid);
     // let topIndustries = await FinanceService.getTopIndustries(cid);
