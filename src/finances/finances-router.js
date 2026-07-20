@@ -6,17 +6,26 @@ const FinanceService = require('../finances/finances-service');
 const financesRouter = express.Router();
 const jsonBodyParser = express.json();
 
-async function getFin(cid) {
-    console.log(`cid: ${cid}`);
+async function getFin(bioguideId) {
+    console.log(`bioguideId: ${bioguideId}`);
     // const results = rep.results[0]
     // const photoUrl = `https://theunitedstates.io/images/congress/450x550/${results.member_id}.jpg`
     // const smallPhotoUrl = `https://theunitedstates.io/images/congress/225x275/${results.member_id}.jpg`
     // let cid = results.crp_id
-    let contributionTotals = await FinanceService.getContributionTotals(cid);
-    let topIndustries = await FinanceService.getTopIndustries(cid);
-    let topContributors = await FinanceService.getTopContributors(cid);
+ 
+    const contributionTotals = await FinanceService.getContributionTotals(bioguideId);
+
+    console.log(`contributionTotals: ${JSON.stringify(contributionTotals)}`);
+
+    // let contributionTotals = await FinanceService.getContributionTotals(cid);
+    // let topIndustries = await FinanceService.getTopIndustries(cid);
+    // let topContributors = await FinanceService.getTopContributors(cid);
     
-    return {topContributors, topIndustries, contributionTotals};
+    return {
+      // topContributors, 
+      // topIndustries,
+      contributionTotals
+    };
   };
 
 

@@ -3,22 +3,19 @@ const fetch = require('node-fetch');
 
 const financesService = {
   //This gets the total contributions and spending by cid #
-  getContributionTotals(cid) {
-    const url = `${config.OPEN_SECRETS_BASE_URL}method=candSummary&cid=${cid}&output=json&apikey=${config.OPEN_SECRETS_API_KEY}`;
+  getContributionTotals(bioguideId) {
+    const url = `${config.WHO_BOUGHT_MY_REP_BASE_URL}/reps/${biogguideId}}`;
 
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        return {
-          total_donations: res.response.summary['@attributes'].total,
-          spent: res.response.summary['@attributes'].spent,
-          cash_on_hand: res.response.summary['@attributes'].cash_on_hand
-        };
+        console.log("res from who bought my rep", res);
+        return res
       });
   },
 
-  getTopIndustries(cid) {
-    const url = `${config.OPEN_SECRETS_BASE_URL}method=candIndustry&cid=${cid}&output=json&apikey=${config.OPEN_SECRETS_API_KEY}`;
+  getTopIndustries(bioguideId) {
+    const url = `${config.OPEN_SECRETS_BASE_URL}method=candIndustry&bioguideId=${cid}&output=json&apikey=${config.OPEN_SECRETS_API_KEY}`;
 
     return fetch(url)
       .then(res => res.json())

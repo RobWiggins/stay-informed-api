@@ -15,7 +15,7 @@ async function getAll(address) {
   console.log('reps.results[0].address_components --->', reps.results[0].address_components)
   console.log('reps.results[0].fields --->', reps.results[0].fields)
   console.log('reps.results[0].fields.congressional_districts[0].current_legislators --->', reps.results[0].fields.congressional_districts[0].current_legislators)
-  
+
   return {
     address: reps.results[0].address_components,
     district: reps.results[0].fields.congressional_districts[0],
@@ -24,7 +24,7 @@ async function getAll(address) {
 }
 
 
-  async function repsResponse (rep) {
+  async function repsResponse(rep) {
     const results = rep.results[0]
     const photoUrl = `https://theunitedstates.io/images/congress/450x550/${results.member_id}.jpg`
     const smallPhotoUrl = `https://theunitedstates.io/images/congress/225x275/${results.member_id}.jpg`
