@@ -2,23 +2,51 @@ const config = require('../config');
 const fetch = require('node-fetch');
 
 const financesService = {
-  //This gets the total contributions and spending by cid #
-  getContributionTotals(bioguideId) {
-    const url = `${config.WHO_BOUGHT_MY_REP_BASE_URL}/reps/${biogguideId}}`;
 
-    return fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        console.log("res from who bought my rep", res);
-        return res
-      });
+  getContributionTotals(bioguideId) {
+
+    const baseUrl = process.env.WHO_BOUGHT_MY_REP_BASE_URL;
+    const apiKey = process.env.WHO_BOUGHT_MY_REP_API_KEY;
+  
+    if (!baseUrl) {
+      throw new Error(
+        'WHO_BOUGHT_MY_REP_BASE_URL is missing from the configuration'
+      );
+    }
+
+     if (!apiKey) {
+      throw new Error(
+        'WHO_BOUGHT_MY_REP_API_KEY is missing from the configuration'
+      );
+    }
+
+    const url = `${baseUrl}/reps/${encodeURIComponent(bioguideId)}`;
+
+    return fetch(url, {
+      headers: {
+        'X-API-Key':  apiKey,
+      }
+    })
+    .then(res => {
+      if(!res.ok) {
+        throw new Error(`Finance API returned ${res.status}: ${res.message}`);
+      }
+      console.log("res from who bought my rep", JSON.stringify(res));
+      return res.json();
+    })
   },
 
   getTopIndustries(bioguideId) {
     const url = `${config.OPEN_SECRETS_BASE_URL}method=candIndustry&bioguideId=${cid}&output=json&apikey=${config.OPEN_SECRETS_API_KEY}`;
 
     return fetch(url)
-      .then(res => res.json())
+      .then(res => {
+        if(!res.ok) {
+          throw new Error(`Finance API returned ${res.status}: ${res.message}`);
+        }
+
+        return res.json();
+      })
       .then(res => {
         let industries = [];
 
@@ -45,8 +73,6 @@ const financesService = {
         return contributors;
       });
   },
-
-
 };
 
 

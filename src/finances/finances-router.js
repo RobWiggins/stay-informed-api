@@ -11,32 +11,36 @@ async function getFin(bioguideId) {
     // const results = rep.results[0]
     // const photoUrl = `https://theunitedstates.io/images/congress/450x550/${results.member_id}.jpg`
     // const smallPhotoUrl = `https://theunitedstates.io/images/congress/225x275/${results.member_id}.jpg`
-    // let cid = results.crp_id
  
     const contributionTotals = await FinanceService.getContributionTotals(bioguideId);
 
     console.log(`contributionTotals: ${JSON.stringify(contributionTotals)}`);
 
-    // let contributionTotals = await FinanceService.getContributionTotals(cid);
-    // let topIndustries = await FinanceService.getTopIndustries(cid);
-    // let topContributors = await FinanceService.getTopContributors(cid);
+    // TODO REMOVE OR CUT ENDPOINTS AND COMMENTS
+    // let contributionTotals = await FinanceService.getContributionTotals(bioguide_id);
+    // let topIndustries = await FinanceService.getTopIndustries(bioguide_id);
+    // let topContributors = await FinanceService.getTopContributors(bioguide_id);
     
     return {
-      // topContributors, 
-      // topIndustries,
-      contributionTotals
+      bioguideId: bioguideId,
+      totalFundingAndSpending: {
+        totalFunding: contributionTotals.data.total_funding,
+        totalSpent: contributionTotals.data.total_spent,
+        cashOnHand: contributionTotals.data.cash_on_hand,
+      },
+      topIndustries: contributionTotals.data.top_industries,
+      // TODO ADD OR CUT
+      // contributionTotals
     };
   };
 
-
 financesRouter.post('/', jsonBodyParser, (req, res, next) => {
-  const { cid } = req.body;
-  if(!cid) {
-    return res.status(400).json({error: 'Must include crp id in request body'});
+  const { bioguide_id } = req.body;
+  if(!bioguide_id) {
+    return res.status(400).json({error: 'Must include bioguide_id in request body'});
   }
-  getFin(cid).then(finObj => res.json(finObj)).catch(next);
+  getFin(bioguide_id).then(finObj => res.json(finObj)).catch(next);
 });
  
 
 module.exports = financesRouter;
-
