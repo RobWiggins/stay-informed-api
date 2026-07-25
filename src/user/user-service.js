@@ -38,9 +38,9 @@ const UserService = {
   },
 
   validateAddress(address) {
-    return RepresentativeService.getDistrict(address).then(districtObj => {
-      console.log('districtObj', districtObj);
-      if (!districtObj || !districtObj.state || !districtObj.district) {
+    return RepresentativeService.getReps(address).then(repsResponse => {
+      console.log('repsResponse', repsResponse);
+      if (!repsResponse || !repsResponse.results[0]?.fields?.congressional_districts[0]?.name) {
         return 'We couldn\'t find your district, check your address and try again';
       }
       return null;

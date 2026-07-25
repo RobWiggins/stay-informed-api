@@ -13,10 +13,10 @@ const RepresentativeService = {
     )
       .then(res => {
         return res.json();
-      })        
+      })
   },
 
-  imagesMap(images){
+  imagesMap(images) {
     let imgArr = images.map(img => {
       const nameArr = img.name.split(' ');
       const lastname = nameArr[nameArr.length-1];

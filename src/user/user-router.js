@@ -59,7 +59,7 @@ userRouter
       };
       const districtError = await UserService.validateAddress(address)
 
-      if(districtError) return res.status(400).json({ error: districtError });
+      if (districtError) return res.status(400).json({ error: districtError });
 
       const user = await UserService.insertUser(req.app.get('db'), newUser);
       res
