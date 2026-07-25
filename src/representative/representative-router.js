@@ -10,16 +10,24 @@ const jsonBodyParser = express.json();
 
 async function getAll(address) {
   const reps = await RepresentativeService.getReps(address);
-  
-  // TODO REMOVE LOG STATEMENTS
-  console.log('reps.results[0].address_components --->', reps.results[0].address_components)
-  console.log('reps.results[0].fields --->', reps.results[0].fields)
-  console.log('reps.results[0].fields.congressional_districts[0].current_legislators --->', reps.results[0].fields.congressional_districts[0].current_legislators)
+
+  const result = reps?.results?.[0];
+  const addressComponents = result?.address_components;
+  const district = result?.fields?.congressional_districts?.[0];
+  const representatives = district?.current_legislators;
+
+  if (!addressComponents || !district || !representatives) {
+    const error = new Error(
+      "We couldn't find your district, check your address and try again"
+    );
+    error.status = 400;
+    throw error;
+  }
 
   return {
-    address: reps.results[0].address_components,
-    district: reps.results[0].fields.congressional_districts[0],
-    representatives: reps.results[0].fields.congressional_districts[0].current_legislators
+    address: addressComponents,
+    district,
+    representatives
   }
 }
 
@@ -50,10 +58,17 @@ representativeRouter.post('/', jsonBodyParser, (req, res, next) => {
     return res.status(400).json({error: 'Must include address in request body'});
   }
 
-  getAll(address).then(reps => res.json(reps)).catch(next);
+  getAll(address)
+    .then(reps => res.json(reps))
+    .catch(error => {
+      if (error.status) {
+        return res.status(error.status).json({ error: error.message });
+      }
+
+      next(error);
+    });
 
 });
  
 
 module.exports = representativeRouter;
-

@@ -3,13 +3,14 @@ const config = require('../config');
 
 const RepresentativeService = {
   getReps(address) {
-    const params = new URLSearchParams({ q: address, fields: 'cd', api_key: process.env.GEOCODE_REPRESENTATIVE_LOOKUP_KEY });
-
-    // TODO REMOVE LOG STATEMENT
-    console.log('params.toString()', params.toString())
+    const params = new URLSearchParams({ 
+      q: address, 
+      fields: 'cd',
+      api_key: config.GEOCODE_REPRESENTATIVE_LOOKUP_KEY,
+    });
 
     return fetch(
-      `${process.env.GEOCODE_API_URL}?${params.toString()}`
+      `${config.GEOCODE_API_URL}?${params.toString()}`
     )
       .then(res => {
         return res.json();

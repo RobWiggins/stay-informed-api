@@ -39,10 +39,12 @@ const UserService = {
 
   validateAddress(address) {
     return RepresentativeService.getReps(address).then(repsResponse => {
-      console.log('repsResponse', repsResponse);
-      if (!repsResponse || !repsResponse.results[0]?.fields?.congressional_districts[0]?.name) {
-        return 'We couldn\'t find your district, check your address and try again';
+      const districtName = repsResponse?.results?.[0]?.fields?.congressional_districts?.[0]?.name
+      
+      if (!districtName) {
+        return "We couldn't find your district, check your address and try again";
       }
+
       return null;
     });
   },
