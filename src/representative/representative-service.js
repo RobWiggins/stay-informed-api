@@ -9,12 +9,20 @@ const RepresentativeService = {
       api_key: config.GEOCODE_REPRESENTATIVE_LOOKUP_KEY,
     });
 
-    return fetch(
-      `${config.GEOCODE_API_URL}?${params.toString()}`
-    )
-      .then(res => {
-        return res.json();
-      })
+    return fetch(`${config.GEOCODE_API_URL}?${params.toString()}`)
+      .then(res =>
+        res.json().then(body => {
+          if (!res.ok) {
+            const error = new Error(
+              body.error || body.message || 'Address lookup failed'
+            );
+            error.status = 400;
+            throw error;
+          }
+
+          return body;
+        })
+      )
   },
 
   imagesMap(images) {
