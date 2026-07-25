@@ -21,6 +21,7 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 const allowedOrigins = [
   'http://localhost:3000',
   'https://stayinformed.vercel.app',
+  'https://stayinformed.vercel.app/api',
 ];
 
 app.use(
